@@ -1,0 +1,138 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int       @id @default(autoincrement())
+  email      String    @unique
+  password   String
+  name       String
+  role       String
+  buildingId Int?       @unique
+  building   Building? @relation(fields: [buildingId], references: [id])
+
+  declaredPayments Payment[] @relation("DeclaredPayment")
+  verifiedPayments Payment[] @relation("VerifiedPayment")
+  createdExpenses  Expense[]
+  paymentLogs      PaymentLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Building {
+  id        Int       @id @default(autoincrement())
+  name      String
+  address   String?
+  manager   User?
+  residents Resident[]
+  payments  Payment[]
+  expenses  Expense[]
+  notifications Notification[]
+  notificationLogs NotificationLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Resident {
+  id         Int      @id @default(autoincrement())
+  firstName  String
+  lastName   String
+  apartment  String
+  phone      String?
+  email      String?
+  buildingId Int
+  building   Building @relation(fields: [buildingId], references: [id])
+  payments   Payment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Payment {
+  id           Int       @id @default(autoincrement())
+  residentId   Int
+  resident     Resident  @relation(fields: [residentId], references: [id])
+  buildingId   Int
+  building     Building  @relation(fields: [buildingId], references: [id])
+  month        Int
+  year         Int
+  amount       Float
+  status       String
+  declaredById Int?
+  declaredBy   User?     @relation("DeclaredPayment", fields: [declaredById], references: [id])
+  verifiedById Int?
+  verifiedBy   User?     @relation("VerifiedPayment", fields: [verifiedById], references: [id])
+  declaredAt   DateTime?
+  verifiedAt   DateTime?
+  notes        String?
+  noPaymentAt  DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([residentId, month, year])
+  logs PaymentLog[]
+}
+
+model PaymentLog {
+  id         Int      @id @default(autoincrement())
+  paymentId  Int
+  payment    Payment  @relation(fields: [paymentId], references: [id])
+  oldStatus  String
+  newStatus  String
+  reason     String?
+  changedById Int
+  changedBy  User     @relation(fields: [changedById], references: [id])
+  createdAt  DateTime @default(now())
+}
+
+model Notification {
+  id         Int       @id @default(autoincrement())
+  type       String
+  title      String
+  message    String
+  isRead     Boolean   @default(false)
+  buildingId Int?
+  building   Building? @relation(fields: [buildingId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+model NotificationLog {
+  id          Int      @id @default(autoincrement())
+  type        String
+  channel     String
+  recipient   String
+  subject     String
+  message     String
+  buildingId  Int?
+  residentId  Int?
+  paymentId   Int?
+  status      String   @default("sent")
+  error       String?
+  createdAt   DateTime @default(now())
+
+  building Building? @relation(fields: [buildingId], references: [id])
+}
+
+model Expense {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String?
+  amount      Float
+  date        DateTime
+  buildingId  Int?
+  building    Building? @relation(fields: [buildingId], references: [id])
+  createdById Int
+  createdBy   User      @relation(fields: [createdById], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

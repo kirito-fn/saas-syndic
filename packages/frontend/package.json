@@ -1,0 +1,28 @@
+{
+  "name": "@syndic/frontend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@syndic/shared": "*",
+    "@tanstack/react-query": "^5.100.9",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "react-router-dom": "^7.6.2",
+    "zod": "^4.4.2"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.2.4",
+    "@types/react": "^19.0.4",
+    "@types/react-dom": "^19.0.4",
+    "@vitejs/plugin-react": "^4.6.4",
+    "tailwindcss": "^4.2.4",
+    "typescript": "^6.0.3",
+    "vite": "^7.1.7"
+  }
+}
