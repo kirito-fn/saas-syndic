@@ -56,7 +56,7 @@ router.delete(
   authenticate,
   requireRole("ADMIN"),
   asyncHandler(async (req, res) => {
-    const id = parseInt(req.params.id, 10);
+    const id = parseInt(req.params.id as string, 10);
     await deleteManager(id);
     res.status(204).end();
   })
@@ -67,7 +67,7 @@ router.put(
   authenticate,
   requireRole("ADMIN"),
   asyncHandler(async (req, res) => {
-    const id = parseInt(req.params.id, 10);
+    const id = parseInt(req.params.id as string, 10);
     const { buildingId } = req.body;
     if (!buildingId || typeof buildingId !== "number") {
       res.status(400).json({ error: "buildingId requis" });
@@ -93,7 +93,7 @@ router.post(
   authenticate,
   requireRole("ADMIN"),
   asyncHandler(async (req, res) => {
-    const id = parseInt(req.params.id, 10);
+    const id = parseInt(req.params.id as string, 10);
     const input = resetPasswordSchema.parse(req.body);
     const password = input.password || Math.random().toString(36).slice(2, 10) + "A1!";
     await resetManagerPassword(id, password);

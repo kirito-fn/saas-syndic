@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
+import type { UserRole } from "@syndic/shared";
 import { UnauthorizedError } from "../lib/errors.js";
 import { logger } from "../lib/logger.js";
 
@@ -26,7 +27,7 @@ export function authenticate(req: Request, _res: Response, next: NextFunction): 
       id: decoded.userId,
       email: decoded.email,
       name: decoded.name,
-      role: decoded.role,
+      role: decoded.role as UserRole,
       buildingId: decoded.buildingId,
     };
     next();

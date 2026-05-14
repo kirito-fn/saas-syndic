@@ -34,7 +34,7 @@ router.get(
   "/:id",
   authenticate,
   wrap(async (req, res) => {
-    const id = parseInt(req.params.id, 10);
+    const id = parseInt(req.params.id as string, 10);
     const payment = await paymentService.getPaymentById(id, req.user!.role, req.user!.buildingId);
     res.json(payment);
   })
@@ -56,7 +56,7 @@ router.put(
   "/:id",
   authenticate,
   wrap(async (req, res) => {
-    const id = parseInt(req.params.id, 10);
+    const id = parseInt(req.params.id as string, 10);
     const input = updatePaymentSchema.parse(req.body);
     const payment = await paymentService.updatePayment(
       id, input, req.user!.id, req.user!.role, req.user!.buildingId
@@ -70,7 +70,7 @@ router.patch(
   authenticate,
   requireRole("ADMIN"),
   wrap(async (req, res) => {
-    const id = parseInt(req.params.id, 10);
+    const id = parseInt(req.params.id as string, 10);
     const payment = await paymentService.verifyPayment(id, req.user!.id, req.user!.role);
     res.json(payment);
   })
@@ -81,7 +81,7 @@ router.patch(
   authenticate,
   requireRole("ADMIN"),
   wrap(async (req, res) => {
-    const id = parseInt(req.params.id, 10);
+    const id = parseInt(req.params.id as string, 10);
     const payment = await paymentService.unverifyPayment(id, req.user!.id, req.user!.role);
     res.json(payment);
   })
@@ -91,7 +91,7 @@ router.patch(
   "/:id/reset",
   authenticate,
   wrap(async (req, res) => {
-    const id = parseInt(req.params.id, 10);
+    const id = parseInt(req.params.id as string, 10);
     const payment = await paymentService.resetPayment(
       id, req.user!.id, req.user!.role, req.user!.buildingId
     );
@@ -103,7 +103,7 @@ router.patch(
   "/:id/mark-unpaid",
   authenticate,
   wrap(async (req, res) => {
-    const id = parseInt(req.params.id, 10);
+    const id = parseInt(req.params.id as string, 10);
     const payment = await paymentService.markAsUnpaid(id, req.user!.id, req.user!.role, req.user!.buildingId);
     res.json(payment);
   })
@@ -113,7 +113,7 @@ router.patch(
   "/:id/no-payment",
   authenticate,
   wrap(async (req, res) => {
-    const id = parseInt(req.params.id, 10);
+    const id = parseInt(req.params.id as string, 10);
     const payment = await paymentService.toggleNoPaymentFlag(id, req.user!.id, req.user!.role, req.user!.buildingId);
     res.json(payment);
   })
@@ -123,7 +123,7 @@ router.get(
   "/:id/logs",
   authenticate,
   wrap(async (req, res) => {
-    const id = parseInt(req.params.id, 10);
+    const id = parseInt(req.params.id as string, 10);
     const logs = await paymentService.getPaymentLogs(id, req.user!.role, req.user!.buildingId);
     res.json(logs);
   })
@@ -134,7 +134,7 @@ router.post(
   authenticate,
   requireRole("ADMIN"),
   wrap(async (req, res) => {
-    const id = parseInt(req.params.id, 10);
+    const id = parseInt(req.params.id as string, 10);
     const { newStatus, reason } = req.body;
     const payment = await paymentService.changePaymentStatus(id, newStatus, reason, req.user!.id);
     res.json(payment);

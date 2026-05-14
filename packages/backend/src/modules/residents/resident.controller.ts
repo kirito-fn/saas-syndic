@@ -32,7 +32,7 @@ router.get(
   "/:id",
   authenticate,
   wrap(async (req, res) => {
-    const id = parseInt(req.params.id, 10);
+    const id = parseInt(req.params.id as string, 10);
     const resident = await residentService.getResidentById(id, req.user!.role, req.user!.buildingId);
     res.json(resident);
   })
@@ -54,7 +54,7 @@ router.put(
   authenticate,
   requireRole("ADMIN"),
   wrap(async (req, res) => {
-    const id = parseInt(req.params.id, 10);
+    const id = parseInt(req.params.id as string, 10);
     const input = updateResidentSchema.parse(req.body);
     const resident = await residentService.updateResident(id, input);
     res.json(resident);
@@ -66,7 +66,7 @@ router.delete(
   authenticate,
   requireRole("ADMIN"),
   wrap(async (req, res) => {
-    const id = parseInt(req.params.id, 10);
+    const id = parseInt(req.params.id as string, 10);
     await residentService.deleteResident(id);
     res.status(204).end();
   })

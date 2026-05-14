@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: syndic-backend
+    env: node
+    region: frankfurt
+    plan: free
+    buildCommand: npm install && npm run build -w packages/shared && npm run build -w packages/backend
+    startCommand: npx prisma generate --schema=packages/backend/prisma/schema.prisma && npx prisma db push --schema=packages/backend/prisma/schema.prisma && node packages/backend/dist/index.js
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: syndic-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CORS_ORIGIN
+        value: https://ornate-lokum-d0da28.netlify.app
+      - key: NODE_VERSION
+        value: "22"
+
+databases:
+  - name: syndic-db
+    region: frankfurt
+    plan: free
+    postgresMajorVersion: 16

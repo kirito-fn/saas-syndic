@@ -25,7 +25,7 @@ router.get(
   "/:id",
   authenticate,
   wrap(async (req, res) => {
-    const id = parseInt(req.params.id, 10);
+    const id = parseInt(req.params.id as string, 10);
     const building = await buildingService.getBuildingById(id, req.user!.role, req.user!.buildingId);
     res.json(building);
   })
@@ -47,7 +47,7 @@ router.put(
   authenticate,
   requireRole("ADMIN"),
   wrap(async (req, res) => {
-    const id = parseInt(req.params.id, 10);
+    const id = parseInt(req.params.id as string, 10);
     const input = createBuildingSchema.partial().parse(req.body);
     const building = await buildingService.updateBuilding(id, input);
     res.json(building);
@@ -59,7 +59,7 @@ router.delete(
   authenticate,
   requireRole("ADMIN"),
   wrap(async (req, res) => {
-    const id = parseInt(req.params.id, 10);
+    const id = parseInt(req.params.id as string, 10);
     const force = req.query.force === "true";
     await buildingService.deleteBuilding(id, force);
     res.status(204).end();

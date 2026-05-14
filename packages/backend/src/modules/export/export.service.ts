@@ -50,12 +50,8 @@ export async function generateMonthlyReport(month: number, year: number, role: s
     bottom: { style: "thin", color: { argb: "FF059669" } },
   };
 
-  const buildingsQuery = role === "MANAGER" && buildingId
-    ? { where: { id: buildingId } }
-    : {};
-
   const buildings = await prisma.building.findMany({
-    ...buildingsQuery,
+    where: role === "MANAGER" && buildingId ? { id: buildingId } : undefined,
     include: {
       _count: { select: { residents: true, payments: true } },
     },

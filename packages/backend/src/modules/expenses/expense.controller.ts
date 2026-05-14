@@ -44,7 +44,7 @@ router.put(
   authenticate,
   requireRole("ADMIN"),
   wrap(async (req, res) => {
-    const id = parseInt(req.params.id, 10);
+    const id = parseInt(req.params.id as string, 10);
     const input = updateExpenseSchema.parse(req.body);
     const expense = await expenseService.updateExpense(id, input);
     res.json(expense);
@@ -56,7 +56,7 @@ router.delete(
   authenticate,
   requireRole("ADMIN"),
   wrap(async (req, res) => {
-    const id = parseInt(req.params.id, 10);
+    const id = parseInt(req.params.id as string, 10);
     await expenseService.deleteExpense(id);
     res.status(204).end();
   })
