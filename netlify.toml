@@ -5,6 +5,16 @@ publish = "packages/frontend/dist"
 [build.environment]
 NODE_VERSION = "22"
 
+[functions]
+node_bundler = "esbuild"
+external_node_modules = ["@prisma/client", "prisma"]
+included_files = ["node_modules/.prisma/client/**"]
+
+[[redirects]]
+from = "/api/*"
+to = "/.netlify/functions/api/:splat"
+status = 200
+
 # En production, définir VITE_API_URL dans les variables d'environnement Netlify :
 # https://app.netlify.com/sites/YOUR-SITE/settings/env
-# VITE_API_URL = https://votre-backend.render.com
+# VITE_API_URL = https://votre-site.netlify.app
